@@ -28,7 +28,7 @@ export default function Profile({route, navigation}) {
               <Icons
                 icon={icons.Ionicons}
                 name="call-outline"
-                color={Colors.black}
+                color="#006400"
               />
             </TouchableOpacity>
             <Text style={styles.title}>+92301-6159646</Text>
@@ -38,7 +38,7 @@ export default function Profile({route, navigation}) {
               <Icons
                 icon={icons.Ionicons}
                 name="logo-instagram"
-                color={Colors.black}
+                color="#C13584"
               />
             </TouchableOpacity>
             <Text style={styles.title}>kh.bilalzafarr</Text>
@@ -48,7 +48,7 @@ export default function Profile({route, navigation}) {
               <Icons
                 icon={icons.Ionicons}
                 name="logo-twitter"
-                color={Colors.black}
+                color="#1DA1F2"
               />
             </TouchableOpacity>
             <Text style={styles.title}>@beelal.zafarrr</Text>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 13,
   },
   intro: {
     fontWeight: 'bold',

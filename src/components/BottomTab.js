@@ -1,7 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  Modal,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableHighlight,
+} from 'react-native';
 import Colors from '../constants/Colors';
 import Icons, {icons} from './Icons';
+import {Formik} from 'formik';
+import {TextInput, Button, Switch, HelperText} from 'react-native-paper';
+import {data} from '../constants/raw';
 
 const tabIcons = [
   {
@@ -23,6 +33,17 @@ const tabIcons = [
 
 const BottomTab = ({navigation}) => {
   const [focused, setFocused] = useState('home');
+  const [modalVisible, setmodalVisible] = useState(false);
+
+  const [image, setImgUrl] = React.useState('');
+  const [avatar, setAvatarUrl] = React.useState('');
+  const [title, setTitle] = React.useState('');
+  const [caption, setCaption] = React.useState('');
+
+  const toggleModal = () => {
+    setmodalVisible(!modalVisible);
+  };
+
   const navigate = routeName =>
     routeName !== '' ? navigation.navigate(routeName) : null;
 
@@ -32,15 +53,84 @@ const BottomTab = ({navigation}) => {
     });
     return () => unsubscribe;
   }, [navigation]);
+
   return (
     <>
+      <Modal
+        animationType={'slide'}
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          console.log('Modal has been closed.');
+        }}>
+        <View style={styles.modal}>
+          <View style={styles.rowView}>
+            <Text style={styles.text}>Add Feed</Text>
+
+            <TouchableHighlight onPress={toggleModal}>
+              <Icons icon={icons.Ionicons} name="close" color="#006400" />
+            </TouchableHighlight>
+          </View>
+          <Formik
+            initialValues={{image: '', avatar: '', title: '', caption: ''}}
+            onSubmit={values => {
+              data.push(values);
+              console.log(values);
+              setmodalVisible(false);
+            }}>
+            {({handleChange, handleBlur, handleSubmit, values}) => (
+              <View>
+                <TextInput
+                  label="Image Url"
+                  onChangeText={handleChange('image')}
+                  onBlur={handleBlur('image')}
+                  value={values.image}
+                  style={{width: 300, height: 60, marginTop: 30}}
+                />
+
+                <TextInput
+                  label="Avatar Url"
+                  onChangeText={handleChange('avatar')}
+                  value={values.avatar}
+                  style={{width: 300, height: 60, marginTop: 30}}
+                />
+                <TextInput
+                  label="Title"
+                  onChangeText={handleChange('title')}
+                  value={values.title}
+                  style={{width: 300, height: 60, marginTop: 30}}
+                />
+                <TextInput
+                  label="Captin"
+                  onChangeText={handleChange('caption')}
+                  value={values.caption}
+                  style={{width: 300, height: 60, marginTop: 30}}
+                />
+
+                <Button
+                  onPress={handleSubmit}
+                  title="Submit"
+                  mode="contained"
+                  style={{marginTop: 30}}>
+                  Press me
+                </Button>
+              </View>
+            )}
+          </Formik>
+        </View>
+      </Modal>
+
       {tabIcons.map((item, index) => (
         <TouchableOpacity
           key={index}
-          onPress={() => {
-            setFocused(item.ico1);
-            navigate(item.routeName);
-          }}
+          onPress={
+            index == 2
+              ? toggleModal
+              : () => {
+                  setFocused(item.ico1);
+                  navigate(item.routeName);
+                }
+          }
           style={[index === 2 && styles.plusIconStyle]}>
           <Icons
             icon={item.type}
@@ -71,5 +161,41 @@ const styles = StyleSheet.create({
     elevation: 8,
     borderWidth: 4,
     borderColor: Colors.white,
+  },
+  container: {flex: 1, justifyContent: 'center', marginHorizontal: 30},
+  input: {marginVertical: 5},
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginVertical: 20,
+    justifyContent: 'space-between',
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'silver',
+    padding: 100,
+  },
+  rowView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    color: '#fff',
+    marginTop: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  label: {
+    color: '#222',
+    margin: 10,
+    marginLeft: 0,
+    fontWeight: 'bold',
+  },
+
+  input: {},
+  buttonView: {
+    marginTop: 20,
   },
 });
